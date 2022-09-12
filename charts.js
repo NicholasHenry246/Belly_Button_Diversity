@@ -66,9 +66,9 @@ function buildCharts(sample) {
 
         var firstSample = filterSamples[0]
 //     // 6. Create variables that hold the otu_ids, otu_labels, and sample_values.
-        var otuIDS = firstSample.otu_ids
-        var otulabels = firstSample.otu_labels
-        var sampleValues = firstSample.sample_values
+        var otuIDS = firstSample.otu_ids;
+        var otulabels = firstSample.otu_labels;
+        var sampleValues = firstSample.sample_values;
         console.log(sampleValues)
 //     // 7. Create the yticks for the bar chart.
 //     // Hint: Get the the top 10 otu_ids and map them in descending order  
@@ -76,15 +76,15 @@ function buildCharts(sample) {
 
      var yticks = sampleValues.slice(0, 10).reverse();
      var labels = otulabels.slice(0,10).reverse()
-     var ids = otuIDS.slice(0,10).reverse()
+     var ids = otuIDS.slice(0,10).reverse().map(x => `OTU ${x.toString()}`)
       console.log(yticks)
 //     // 8. Create the trace for the bar chart. 
      var barTrace = {
        
         type: "bar",
         x: yticks,
-        y: labels,
-        text: ids,
+        y: ids,
+        text: labels,
         //y: temps,
         orientation: "h"
       };
@@ -94,35 +94,25 @@ function buildCharts(sample) {
       
 //     // 9. Create the layout for the bar chart. 
      var barLayout = {
-        
+        title: "Diversity"
      
-     };
+ };
+
 //     // 10. Use Plotly to plot the data with the layout. 
-     Plotly.newPlot("bar", barData, barLayout)
-  });
- }
-
- // Bar and Bubble charts
-// Create the buildCharts function.
-function buildCharts(sample) {
-  // Use d3.json to load and retrieve the samples.json file 
-  d3.json("samples.json").then((data) => {
-    
-
-    // Deliverable 1 Step 10. Use Plotly to plot the data with the layout. 
-    Plotly.newPlot("bubble", bubbleData, bubbleLayout)
-
+      Plotly.newPlot("bar", barData, barLayout);
+  
     // 1. Create the trace for the bubble chart.
     //https://plotly.com/javascript/bubble-charts/
 
     var trace1 = {
       x: otuIDS,
-      y: sample_values,
+      y: sampleValues,
       text: otulabels,
       mode: 'markers',
       marker: {
-      size: [40, 60, 80, 100]
-      }
+      size: sampleValues,
+      color: otuIDS //['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
+      },
     }
 
     var bubbleData = [trace1];
@@ -131,12 +121,62 @@ function buildCharts(sample) {
     var bubbleLayout = {
       title: 'Marker Size',
       showlegend: false,
-      height: 600,
-      width: 600
+      height: 500,
+      width: 1200
       
     };
 
     // 3. Use Plotly to plot the data with the layout.
-    Plotly.newPlot(); 
+    Plotly.newPlot("bubble", bubbleData, bubbleLayout)  
+   
+    // 3. Create a variable that holds the washing frequency.
+   
+    var allMetadata = data.metadata
+    var metadataFilter = allMetadata.filter(sampleObj => sampleObj.id == sample)
+    var metaSample = metadataFilter[0]
+    var wafreq = parseFloat(metaSample["wfreq"])
+    
+  //https://plotly.com/javascript/gauge-charts/
+
+    // 4. Create the trace for the gauge chart.
+    var gaugeTrace = [
+      {
+        domain: { x: [0, 1], y: [0, 1] },
+        value: wafreq,
+        title: { text: "<b>Belly Button Washing Frequency</b><br></br> Scrubs Per Week"},
+        gauge: {axis: {range: [null,10], dtick: "2"}},
+        type: "indicator",
+        mode: "gauge+number",
+        bar: {color: "black"},
+        bgcolor: "white",
+        //borderwidth: 2,
+        //bordercolor: "gray",
+        steps: [
+          {range: [0,2], color: "red"},
+          {range: [2,4], color: "orange"},
+          {range: [4,6], color: "yellow"},
+          {range: [6,8], color: "lightgreen"},
+          {range: [8,10], color: "green"}
+        ],
+        dtick: 2
+      }
+ ];
+     
+    var gaugeData = [gaugeTrace];
+    // 5. Create the layout for the gauge chart.
+    var gaugeLayout = { 
+      automargin: true,
+          // width: 500,
+          // height: 400,
+          // margin: { t: 25, r: 25, l: 25, b: 25 },
+          // paper_bgcolor: "lavender",
+          // font: { color: "darkblue", family: "Arial" }
+};
+
+    // 6. Use Plotly to plot the gauge data and layout.
+    Plotly.newPlot("gauge", gaugeData, gaugeLayout);
+  
+  //});
+//}
   });
-}
+}; 
