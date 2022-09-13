@@ -94,7 +94,7 @@ function buildCharts(sample) {
       
 //     // 9. Create the layout for the bar chart. 
      var barLayout = {
-        title: "Diversity"
+        title: "Top 10 Bacteria Cultures Found"
      
  };
 
@@ -119,10 +119,10 @@ function buildCharts(sample) {
 
     // 2. Create the layout for the bubble chart.
     var bubbleLayout = {
-      title: 'Marker Size',
+      title: 'Bacteria Cultures Per Sample',
       showlegend: false,
-      height: 500,
-      width: 1200
+      height: 400,
+      width: 1150
       
     };
 
@@ -144,25 +144,27 @@ function buildCharts(sample) {
         domain: { x: [0, 1], y: [0, 1] },
         value: wafreq,
         title: { text: "<b>Belly Button Washing Frequency</b><br></br> Scrubs Per Week"},
-        gauge: {axis: {range: [null,10], dtick: "2"}},
-        type: "indicator",
-        mode: "gauge+number",
+        gauge: {axis: {range: [null, 10], dtick: "2"},
         bar: {color: "black"},
         bgcolor: "white",
-        //borderwidth: 2,
-        //bordercolor: "gray",
         steps: [
           {range: [0,2], color: "red"},
           {range: [2,4], color: "orange"},
           {range: [4,6], color: "yellow"},
           {range: [6,8], color: "lightgreen"},
-          {range: [8,10], color: "green"}
-        ],
+          {range: [8,10], color: "green"}   ]      },
+        type: "indicator",
+        mode: "gauge+number",
+        
+        
+        //borderwidth: 2,
+        //bordercolor: "gray",
+      
         
       }
  ];
      
-    var gaugeData = [gaugeTrace];
+    var gaugeData = gaugeTrace;
     // 5. Create the layout for the gauge chart.
     var gaugeLayout = { 
       automargin: true,
